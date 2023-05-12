@@ -27,19 +27,7 @@ router.get("/", async function (req, res, next) {
     return res.render("customer_list.html", { customers });
 
   }
-  
-  
-  
-
 });
-
-
-// FIXME: another template for loading search 
-/** Show users that we search */
-// router.get("/search", async function (req, res, next) {
-  // want to filter out from our search name
-  // render a page with the searched names 
-// })
 
 /** Form to add a new customer. */
 
