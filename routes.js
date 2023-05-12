@@ -13,9 +13,33 @@ const router = new express.Router();
 /** Homepage: show list of customers. */
 
 router.get("/", async function (req, res, next) {
-  const customers = await Customer.all();
-  return res.render("customer_list.html", { customers });
+  // const customers = await Customer.all();
+  const queryString = req.query.search;
+  console.log("querystring=>", queryString);
+
+  if (!queryString) {
+    const customers = await Customer.all();
+    console.log('we dont have a query string');
+    return res.render("customer_list.html", { customers });
+  } else {
+    const customers = await Customer.searchForCustomer(queryString);
+    console.log('we have a query string');
+    return res.render("customer_list.html", { customers });
+
+  }
+  
+  
+  
+
 });
+
+
+// FIXME: another template for loading search 
+/** Show users that we search */
+// router.get("/search", async function (req, res, next) {
+  // want to filter out from our search name
+  // render a page with the searched names 
+// })
 
 /** Form to add a new customer. */
 
