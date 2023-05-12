@@ -30,9 +30,11 @@ router.get("/", async function (req, res, next) {
 });
 
 /**Show top ten customers with most reservations */
+
 router.get('/top-ten/', async function (req, res, next) {
-  const topTen = Reservation.getTopTenResCount();
-  return res.render("top_ten.html");
+  const customers = await Customer.getTopTen();
+
+  return res.render("top_ten.html", { customers });
 })
 
 /** Form to add a new customer. */

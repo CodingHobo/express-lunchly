@@ -55,14 +55,22 @@ class Customer {
     return new Customer(customer);
   }
 
+  /** Returns customer full name */
+
   fullName() {
     return `${this.firstName} ${this.lastName}`
   }
 
+  /** Search for customers names that are similar to query string input
+   * returns [{
+   *          id:int, 
+   *          firstName: 'first', 
+   *          lastName: 'last', 
+   *          phone: 555-555-5555, 
+   *          notes: 'some note'}, ...]
+   */
+
   static async searchForCustomer(name) {
-    // sql query that SELECT first name and last name
-    // FROM customers
-    // WHERE first name LIKE "%first name%" or name LIKE "%last name%"
     const search = `%${name.toLowerCase()}%`
 
     console.log("search", search);
@@ -87,15 +95,30 @@ class Customer {
     //   err.status = 404;
     //   throw err;
     // }
-
+      console.log(searchedFor);
     return searchedFor;
   }
 
-  // static async getTopTen() {
-  //   const results = await db.query(
+  /** Get the top ten customers with the most reservations ordered by most*/
 
-  //     )
-  // }
+  static async getTopTen() {
+    const results = await db.query(
+      `SELECT customers.id,
+                customers.first_name AS "firstName",
+                customers.last_name  AS "lastName",
+                customers.phone,
+                customers.notes,
+                COUNT(reservations.customer_id)
+        FROM customers
+          JOIN reservations ON customers.id = reservations.customer_id
+          GROUP BY customers.id 
+          ORDER BY COUNT(reservations.customer_id) DESC
+          LIMIT 10`)
+
+    const topTen = results.rows.map(c => new Customer(c));
+    
+    return topTen;
+  }
 
   /** get all reservations for this customer. */
 
