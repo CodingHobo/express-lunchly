@@ -91,11 +91,25 @@ class Customer {
     return searchedFor;
   }
 
-  // static async getTopTen() {
-  //   const results = await db.query(
+  static async getTopTen() {
+    const results = await db.query(
+      `SELECT customers.id,
+                customers.first_name AS "firstName",
+                customers.last_name  AS "lastName",
+                customers.phone,
+                customers.notes,
+                COUNT(reservations.customer_id)
+        FROM customers
+          JOIN reservations ON customers.id = reservations.customer_id
+          GROUP BY customers.id 
+          ORDER BY COUNT(reservations.customer_id) DESC
+          LIMIT 10`)
 
-  //     )
-  // }
+    const topTen = results.rows.map(c => new Customer(c));
+    console.log("top ten", topTen);
+    
+    return topTen;
+  }
 
   /** get all reservations for this customer. */
 

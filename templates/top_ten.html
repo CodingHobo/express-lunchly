@@ -5,5 +5,14 @@
 
   <h1>Top Ten Customers</h1>
 
+  <ul style="column-count: 4">
+    {% for customer in customers %}
+      <li>
+        <a href="/{{ customer.id }}/">
+          {{ customer.fullName(customer.id) }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
 
 {% endblock %}
