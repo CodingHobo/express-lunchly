@@ -28,7 +28,6 @@ class Customer {
            FROM customers
            ORDER BY last_name, first_name`,
     );
-    console.log(results.rows);
     return results.rows.map(c => new Customer(c));
   }
 
@@ -53,7 +52,6 @@ class Customer {
       err.status = 404;
       throw err;
     }
-
     return new Customer(customer);
   }
 
@@ -63,30 +61,41 @@ class Customer {
 
   static async searchForCustomer(name) {
     // sql query that SELECT first name and last name
-    // FROM customers 
+    // FROM customers
     // WHERE first name LIKE "%first name%" or name LIKE "%last name%"
-    const search = `%${name}%`
+    const search = `%${name.toLowerCase()}%`
+
     console.log("search", search);
 
     const result = await db.query(
-      `SELECT id, 
-                first_name AS "firstName", 
-                last_name  AS "lastName", 
-                phone, 
+      `SELECT id,
+                first_name AS "firstName",
+                last_name  AS "lastName",
+                phone,
                 notes
         FROM customers
-        WHERE first_name LIKE $1 OR last_name LIKE $2`,
+        WHERE LOWER(first_name) LIKE $1 OR LOWER(last_name) LIKE $2
+        ORDER BY last_name, first_name`,
       [search, search]
     );
 
-    console.log("result rows =>", result.rows);
-
     const searchedFor = result.rows.map(c => new Customer(c));
-    console.log("searched for=>", searchedFor);
+
+    //FIXME: best practices for handling bad input and not nav away from page
+    // if (!searchedFor.length) {
+    //   const err = new Error(`No such customer`);
+    //   err.status = 404;
+    //   throw err;
+    // }
 
     return searchedFor;
-
   }
+
+  // static async getTopTen() {
+  //   const results = await db.query(
+
+  //     )
+  // }
 
   /** get all reservations for this customer. */
 
