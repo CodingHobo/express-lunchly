@@ -3,6 +3,7 @@
 /** Express app for Lunchly. */
 
 const express = require("express");
+const favicon = require('serve-favicon')
 const nunjucks = require("nunjucks");
 const routes = require("./routes");
 const { NotFoundError } = require("./expressError");

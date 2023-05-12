@@ -13,19 +13,16 @@ const router = new express.Router();
 /** Homepage: show list of customers. */
 
 router.get("/", async function (req, res, next) {
-  // const customers = await Customer.all();
   const queryString = req.query.search;
-  console.log("querystring=>", queryString);
 
   if (!queryString) {
     const customers = await Customer.all();
-    console.log('we dont have a query string');
+
     return res.render("customer_list.html", { customers });
   } else {
     const customers = await Customer.searchForCustomer(queryString);
-    console.log('we have a query string');
-    return res.render("customer_list.html", { customers });
 
+    return res.render("customer_list.html", { customers });
   }
 });
 

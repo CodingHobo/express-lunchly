@@ -63,17 +63,15 @@ class Customer {
 
   /** Search for customers names that are similar to query string input
    * returns [{
-   *          id:int, 
-   *          firstName: 'first', 
-   *          lastName: 'last', 
-   *          phone: 555-555-5555, 
+   *          id:int,
+   *          firstName: 'first',
+   *          lastName: 'last',
+   *          phone: 555-555-5555,
    *          notes: 'some note'}, ...]
    */
 
   static async searchForCustomer(name) {
-    const search = `%${name.toLowerCase()}%`
-
-    console.log("search", search);
+    const search = `%${name}%`
 
     const result = await db.query(
       `SELECT id,
@@ -82,20 +80,17 @@ class Customer {
                 phone,
                 notes
         FROM customers
-        WHERE LOWER(first_name) LIKE $1 OR LOWER(last_name) LIKE $2
+        WHERE CONCAT(first_name, ' ', last_name) ILIKE $1
         ORDER BY last_name, first_name`,
-      [search, search]
+      [search]
     );
 
     const searchedFor = result.rows.map(c => new Customer(c));
+    console.log('searchedFor=', searchedFor)
 
-    //FIXME: best practices for handling bad input and not nav away from page
-    // if (!searchedFor.length) {
-    //   const err = new Error(`No such customer`);
-    //   err.status = 404;
-    //   throw err;
-    // }
-      console.log(searchedFor);
+    //TODO: fix html
+
+
     return searchedFor;
   }
 
@@ -111,12 +106,12 @@ class Customer {
                 COUNT(reservations.customer_id)
         FROM customers
           JOIN reservations ON customers.id = reservations.customer_id
-          GROUP BY customers.id 
-          ORDER BY COUNT(reservations.customer_id) DESC
+          GROUP BY customers.id
+          ORDER BY COUNT(reservations.customer_id) DESC, first_name, last_name
           LIMIT 10`)
 
     const topTen = results.rows.map(c => new Customer(c));
-    
+
     return topTen;
   }
 
