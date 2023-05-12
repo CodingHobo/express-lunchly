@@ -65,22 +65,6 @@ class Reservation {
       );
     }
   }
-
-//   static async getTopTenResCount() {
-//     const results = await db.query(
-//       `SELECT id,
-//               COUNT(customer_id) AS "customerId",
-//               num_guests AS "numGuests",
-//               start_at AS "startAt",
-//               notes AS "notes"
-//        FROM reservations
-//        GROUP BY id
-//        ORDER BY COUNT(customer_id)
-//        LIMIT 10`);
-// console.log('results.rows=> ', results.rows)
-// return results.rows.map(row => new Reservation(row));
-//   }
-
 }
 
 

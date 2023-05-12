@@ -59,10 +59,16 @@ class Customer {
     return `${this.firstName} ${this.lastName}`
   }
 
+  /** Search for customers names that are similar to query string input
+   * returns [{
+   *          id:int, 
+   *          firstName: 'first', 
+   *          lastName: 'last', 
+   *          phone: 555-555-5555, 
+   *          notes: 'some note'}, ...]
+   */
+
   static async searchForCustomer(name) {
-    // sql query that SELECT first name and last name
-    // FROM customers
-    // WHERE first name LIKE "%first name%" or name LIKE "%last name%"
     const search = `%${name.toLowerCase()}%`
 
     console.log("search", search);
@@ -87,9 +93,11 @@ class Customer {
     //   err.status = 404;
     //   throw err;
     // }
-
+      console.log(searchedFor);
     return searchedFor;
   }
+
+  /** Get the top ten customers with the most reservations ordered by most*/
 
   static async getTopTen() {
     const results = await db.query(
@@ -106,7 +114,6 @@ class Customer {
           LIMIT 10`)
 
     const topTen = results.rows.map(c => new Customer(c));
-    console.log("top ten", topTen);
     
     return topTen;
   }
